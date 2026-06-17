@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A Little Surprise For You 🎁</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+
+  <!-- ======== SCREEN 1: PLAYFUL RUNAWAY BUTTON ======== -->
+  <div id="intro-screen" class="screen active">
+    <div class="floating-hearts" aria-hidden="true">
+      <span style="left:8%;animation-delay:0s">♡</span>
+      <span style="left:25%;animation-delay:2s">♡</span>
+      <span style="left:50%;animation-delay:1s">♡</span>
+      <span style="left:72%;animation-delay:3s">♡</span>
+      <span style="left:88%;animation-delay:1.5s">♡</span>
+    </div>
+
+    <div class="intro-content">
+      <div class="gift-emoji">🎁</div>
+      <h1>Someone made something<br>special just for you...</h1>
+      <p class="subtitle">tap to open</p>
+    </div>
+
+    <p id="miss-msg" class="miss-msg"></p>
+    <button id="runaway-btn" onclick="handleClick(event)">Open ♥</button>
+
+    <div id="caught-screen" class="caught-screen hidden">
+      <div class="caught-emoji">🎉</div>
+      <h2>You caught it!</h2>
+      <p>you were meant to find this ♥</p>
+      <button class="open-btn" onclick="showLovePage()">Open your surprise ♥</button>
+    </div>
+  </div>
+
+  <!-- ======== SCREEN 2: LOVE PAGE ======== -->
+  <canvas id="sparkle-canvas"></canvas>
+  <div id="love-screen" class="screen hidden">
+
+    <div class="floating-hearts" aria-hidden="true">
+      <span style="left:5%;animation-delay:0s">♡</span>
+      <span style="left:30%;animation-delay:1.5s">♡</span>
+      <span style="left:60%;animation-delay:0.7s">♡</span>
+      <span style="left:80%;animation-delay:2.5s">♡</span>
+    </div>
+
+    <!-- SECTION 1: Hero — Date & Note (full viewport) -->
+    <section class="hero-section fade-section">
+      <div class="heart-big">♥</div>
+
+      
+      <h1 class="names">{{ cfg.person1 }} &amp; {{ cfg.person2 }}</h1>
+      <p class="tagline">one month of us</p>
+
+      <div class="counter-strip">
+        <div class="counter-box">
+          <span class="counter-num" id="days-count">0</span>
+          <span class="counter-label" id="counter-label-days">Days Left</span>
+        </div>
+        <div class="counter-box">
+          <span class="counter-num" id="hours-count">0</span>
+          <span class="counter-label" id="counter-label-hours">Hours Left</span>
+        </div>
+        <div class="counter-box">
+          <span class="counter-num" id="mins-count">0</span>
+          <span class="counter-label" id="counter-label-mins">Mins Left</span>
+        </div>
+      </div>
+
+      <!-- Love note -->
+      <div class="message-card fade-section">
+        <span class="quote-mark" aria-hidden="true">"</span>
+        
+        <p class="message-text">{{ cfg.message }}</p>
+        <p class="message-sig">— with love, always ♥</p>
+      </div>
+
+      <div class="scroll-hint fade-section">
+        <span>scroll for more</span>
+        <div class="scroll-arrow">↓</div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Photo Slideshow (full viewport) -->
+    <section class="slideshow-section fade-section">
+      <p class="section-title">moments we've shared</p>
+
+      <div class="slideshow-wrapper">
+        <div class="slideshow-track" id="slideshow-track">
+          {% if cfg.photos %}
+            {% for photo in cfg.photos %}
+            <div class="slide"><img src="/static/uploads/{{ photo }}" alt=""></div>
+            {% endfor %}
+          {% else %}
+            <div class="slide"><div class="photo-placeholder">📸</div></div>
+            <div class="slide"><div class="photo-placeholder">📸</div></div>
+            <div class="slide"><div class="photo-placeholder">📸</div></div>
+          {% endif %}
+        </div>
+
+        <button class="slide-btn prev" onclick="changeSlide(-1)">&#8592;</button>
+        <button class="slide-btn next" onclick="changeSlide(1)">&#8594;</button>
+
+        <div class="slide-dots" id="slide-dots"></div>
+      </div>
+    </section>
+
+    <footer class="love-footer fade-section">✦ &nbsp; made with love &nbsp; ✦</footer>
+
+  </div><!-- end love-screen -->
+
+  <script>
+    const TARGET_DATE = new Date("{{ cfg.target_date }}");
+  </script>
+
+  <!-- ── BACKGROUND MUSIC ── -->
+  {% if cfg.music %}
+  <audio id="bg-music" loop preload="auto">
+    <source src="/static/uploads/{{ cfg.music }}" type="audio/mpeg">
+  </audio>
+
+  <!-- Floating music toggle button -->
+  <button id="music-btn" onclick="toggleMusic()" title="Toggle music">
+    <span id="music-icon">♪</span>
+  </button>
+  {% endif %}
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

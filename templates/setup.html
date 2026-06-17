@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Setup — Anniversary Site ⚙️</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Lato:wght@300;400;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: #fff5f8;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      color: #333;
+    }
+
+    .container { max-width: 600px; margin: 0 auto; }
+
+    /* ── HEADER ── */
+    .header { text-align: center; margin-bottom: 2.5rem; }
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-style: italic;
+      color: #72243e;
+    }
+    .header p { font-size: 13px; color: #993556; margin-top: 0.3rem; letter-spacing: 1px; }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border: 1px solid #f4c0d1;
+      border-radius: 16px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: #72243e;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ── FORM FIELDS ── */
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #993556;
+      margin-bottom: 0.35rem;
+    }
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #f4c0d1;
+      border-radius: 8px;
+      font-family: 'Lato', sans-serif;
+      font-size: 14px;
+      color: #333;
+      background: #fff9fb;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input:focus, textarea:focus { border-color: #d4537e; }
+    textarea { resize: vertical; min-height: 100px; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      background: #d4537e;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 11px 28px;
+      font-size: 14px;
+      font-family: 'Lato', sans-serif;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #b03a62; }
+    .btn-ghost {
+      background: transparent;
+      color: #d4537e;
+      border: 1.5px solid #d4537e;
+    }
+    .btn-ghost:hover { background: #fbeaf0; }
+    .btn-sm { padding: 7px 16px; font-size: 12px; }
+    .btn-danger { background: #e05555; }
+    .btn-danger:hover { background: #b83333; }
+
+    /* ── UPLOAD AREA ── */
+    .upload-area {
+      border: 2px dashed #f4c0d1;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1.25rem;
+      position: relative;
+    }
+    .upload-area:hover { border-color: #d4537e; background: #fff5f8; }
+    .upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .upload-area p { font-size: 13px; color: #993556; }
+    .upload-area small { font-size: 11px; color: #bbb; }
+
+    /* ── PHOTO GRID ── */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .photo-item { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-item .delete-btn {
+      position: absolute;
+      top: 4px; right: 4px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 24px; height: 24px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .photo-item .delete-btn:hover { background: #e05555; }
+    .no-photos { font-size: 13px; color: #bbb; text-align: center; padding: 1rem 0; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      background: #72243e;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 14px;
+      z-index: 999;
+      animation: slideUp 0.4s ease, fadeOut 0.5s ease 2.5s forwards;
+    }
+    @keyframes slideUp { from { transform: translateX(-50%) translateY(20px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; } }
+
+    /* ── PREVIEW LINK ── */
+    .preview-bar {
+      background: #fbeaf0;
+      border: 1px solid #f4c0d1;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .preview-bar p { font-size: 13px; color: #72243e; }
+    .preview-bar strong { font-size: 14px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>⚙️ Anniversary Setup</h1>
+    <p>Customize everything here — no coding needed</p>
+  </div>
+
+  <!-- Preview bar -->
+  <div class="preview-bar">
+    <div>
+      <strong>Your site is ready!</strong>
+      <p>Open this in a browser to preview</p>
+    </div>
+    <a href="/" target="_blank" class="btn btn-ghost">Preview Site ↗</a>
+  </div>
+
+  <!-- ── SECTION 1: Details ── -->
+  <div class="card">
+    <h2>💕 Names & Message</h2>
+    <form method="POST">
+      <input type="hidden" name="action" value="save_details">
+
+      <label>Person 1 (your friend)</label>
+      <input type="text" name="person1" value="{{ cfg.person1 }}" placeholder="e.g. Aryan">
+
+      <label>Person 2 (the surprise recipient)</label>
+      <input type="text" name="person2" value="{{ cfg.person2 }}" placeholder="e.g. Priya">
+
+      <label>Anniversary / Special Date & Time</label>
+      <input type="datetime-local" name="target_date" value="{{ cfg.target_date }}">
+
+      <label>Love Note (shown on the main page)</label>
+      <textarea name="message" placeholder="Write something heartfelt...">{{ cfg.message }}</textarea>
+
+      <button class="btn" type="submit">Save Details ♥</button>
+    </form>
+  </div>
+
+  <!-- ── SECTION 2: Photos ── -->
+  <div class="card">
+    <h2>📸 Photos</h2>
+
+    <!-- Existing photos -->
+    {% if cfg.photos %}
+    <div class="photo-grid">
+      {% for photo in cfg.photos %}
+      <div class="photo-item">
+        <img src="/static/uploads/{{ photo }}" alt="">
+        <form method="POST" style="display:inline">
+          <input type="hidden" name="action" value="delete_photo">
+          <input type="hidden" name="filename" value="{{ photo }}">
+          <button class="delete-btn" type="submit" title="Remove">✕</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-photos">No photos yet — upload some below!</p>
+    {% endif %}
+
+    <!-- Upload form -->
+    <form method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="action" value="upload_photos">
+      <div class="upload-area">
+        <input type="file" name="photos" accept="image/*" multiple>
+        <div class="upload-icon">📁</div>
+        <p>Click to choose photos</p>
+        <small>JPG, PNG, WEBP supported · Multiple allowed</small>
+      </div>
+      <button class="btn" type="submit">Upload Photos</button>
+    </form>
+  </div>
+
+
+  <!-- ── SECTION 3: Music ── -->
+  <div class="card">
+    <h2>🎵 Background Music</h2>
+
+    {% if cfg.music %}
+    <div style="background:#fff9fb;border:1px solid #f4c0d1;border-radius:10px;padding:1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <p style="font-size:13px;color:#72243e;font-weight:700;">🎵 {{ cfg.music }}</p>
+        <audio controls style="margin-top:6px;width:100%;max-width:280px;">
+          <source src="/static/uploads/{{ cfg.music }}">
+        </audio>
+      </div>
+      <form method="POST">
+        <input type="hidden" name="action" value="delete_music">
+        <button class="btn btn-danger btn-sm" type="submit">Remove</button>
+      </form>
+    </div>
+    {% else %}
+    <p style="font-size:13px;color:#bbb;margin-bottom:1rem;">No music uploaded yet — the site will be silent.</p>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="action" value="upload_music">
+      <div class="upload-area">
+        <input type="file" name="music" accept="audio/mp3,audio/ogg,audio/wav,audio/m4a,.mp3,.ogg,.wav,.m4a">
+        <div class="upload-icon">🎵</div>
+        <p>Click to choose a song</p>
+        <small>MP3, OGG, WAV, M4A supported</small>
+      </div>
+      <button class="btn" type="submit">Upload Song</button>
+    </form>
+    <p style="font-size:11px;color:#bbb;margin-top:0.75rem;">⚠️ Browsers block auto-play until the user taps the screen once. The music will start after she taps "Open your surprise ♥"</p>
+  </div>
+
+</div>
+
+{% if saved %}
+<div class="toast">✓ Saved successfully!</div>
+{% endif %}
+
+</body>
+</html>
+<script>
+// inject music card before closing container div
+document.addEventListener('DOMContentLoaded', function() {});
+</script>

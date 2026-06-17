@@ -1,0 +1,6 @@
+# Don't upload personal files to GitHub
+static/uploads/
+config.json
+__pycache__/
+*.pyc
+.env
